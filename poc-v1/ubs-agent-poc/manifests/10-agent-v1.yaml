@@ -1,0 +1,28 @@
+# Simulates CI/CD's FIRST push for "stock-research-agent" under blueprint
+# bp-8891. A developer/pipeline needs to know exactly two labels -- nothing
+# else about this system. Everything else is a completely ordinary
+# Deployment.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-research-agent-v1
+  namespace: ubs-poc
+  labels:
+    ubs.io/blueprint-id: bp-8891
+    ubs.io/agent-name: stock-research-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: stock-research-agent, version: v1 }
+  template:
+    metadata:
+      labels: { app: stock-research-agent, version: v1 }
+    spec:
+      containers:
+        - name: agent
+          image: nginx:1.25   # stand-in workload image for the POC
+          ports: [{ containerPort: 80 }]
+          readinessProbe:
+            httpGet: { path: /, port: 80 }
+            initialDelaySeconds: 2
+            periodSeconds: 3

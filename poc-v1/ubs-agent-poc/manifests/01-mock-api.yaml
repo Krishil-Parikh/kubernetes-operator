@@ -1,0 +1,38 @@
+# Stands in for "something internal to UBS" -- the Blueprint API and the
+# Graph API. In the real system these are pre-existing UBS services the
+# controller calls out to; here they're a single Flask process so the whole
+# demo can run on a laptop with no external dependencies.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mock-ubs-api
+  namespace: ubs-poc
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: mock-ubs-api }
+  template:
+    metadata:
+      labels: { app: mock-ubs-api }
+    spec:
+      containers:
+        - name: mock-api
+          image: ubs-poc/mock-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet: { path: /health, port: 5000 }
+            initialDelaySeconds: 2
+            periodSeconds: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mock-ubs-api
+  namespace: ubs-poc
+spec:
+  selector: { app: mock-ubs-api }
+  ports:
+    - port: 5000
+      targetPort: 5000

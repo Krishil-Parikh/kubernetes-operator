@@ -1,0 +1,55 @@
+# This is the ENTIRE developer-facing artifact. No CRD, no controller to
+# deploy, no watcher to keep available, no ConfigMap to keep in sync. A
+# developer/CI-CD pipeline needs to know: the two labels, the envFrom
+# secretRef for the credential, and... that's it. Everything else the
+# agent needs (blueprint id, its own image tag) is baked into the image
+# itself via the .env file agent-supervisor reads on startup -- see
+# demo-agent-image/.env and docs/ARCHITECTURE.md section 5.
+#
+# To ship a NEW version: change spec.template.spec.containers[0].image and
+# re-apply this SAME Deployment object (same name). Kubernetes' own native
+# RollingUpdate with maxUnavailable=0 handles traffic safety; agent-supervisor
+# (baked into the new image) handles registration/deregistration itself.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-research-agent
+  namespace: ubs-poc-v2
+  labels:
+    ubs.io/blueprint-id: bp-8891
+    ubs.io/agent-name: stock-research-agent
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0   # old capacity never drops while new comes up
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: stock-research-agent
+  template:
+    metadata:
+      labels:
+        app: stock-research-agent
+        ubs.io/blueprint-id: bp-8891
+        ubs.io/agent-name: stock-research-agent
+    spec:
+      terminationGracePeriodSeconds: 30   # bounds how long our own SIGTERM handler can block shutdown
+      containers:
+        - name: agent
+          image: ubs-poc/demo-agent:v1   # stand-in for the real agent workload image, see demo-agent-image/Dockerfile
+          ports:
+            - { name: http, containerPort: 80 }
+            - { name: health, containerPort: 8080 }
+          envFrom:
+            - secretRef:
+                name: bp-8891-token   # only the credential comes from Kubernetes; everything else is in the image's .env
+          readinessProbe:
+            httpGet: { path: /healthz, port: 8080 }   # served by agent-supervisor itself, true only once registered
+            initialDelaySeconds: 1
+            periodSeconds: 2
+          livenessProbe:
+            httpGet: { path: /, port: 80 }
+            initialDelaySeconds: 10
+            periodSeconds: 10

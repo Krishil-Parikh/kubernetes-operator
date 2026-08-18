@@ -1,0 +1,32 @@
+# Demo scenario B: a BAD push. Use this instead of 11-agent-v2.yaml to prove
+# that a broken new version never touches the currently-serving old one.
+#
+# This Deployment's image does not exist, so its pods will sit in
+# ImagePullBackOff forever and never become Ready. Expected controller
+# behaviour: it repeatedly logs "incoming deployment ... not yet Ready --
+# old deployment ... left fully untouched" and NEVER calls the Graph API,
+# NEVER calls register/deregister, and NEVER deletes
+# stock-research-agent-v1. The old agent keeps serving indefinitely.
+#
+# To "roll back": simply delete this broken Deployment. Nothing further to
+# undo -- v1 was never touched, so there is nothing to restore.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-research-agent-v3-broken
+  namespace: ubs-poc
+  labels:
+    ubs.io/blueprint-id: bp-8891
+    ubs.io/agent-name: stock-research-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: stock-research-agent, version: v3-broken }
+  template:
+    metadata:
+      labels: { app: stock-research-agent, version: v3-broken }
+    spec:
+      containers:
+        - name: agent
+          image: registry.invalid/does-not-exist:v3
+          ports: [{ containerPort: 80 }]

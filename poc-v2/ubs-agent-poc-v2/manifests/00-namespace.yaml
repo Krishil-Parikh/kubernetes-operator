@@ -1,0 +1,7 @@
+# v2 design needs no custom RBAC beyond what any Deployment already has --
+# there is no controller ServiceAccount here at all, because there is no
+# controller. This is the entire cluster-level footprint of the design.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ubs-poc-v2

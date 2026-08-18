@@ -1,0 +1,14 @@
+FROM golang:1.22 AS build
+WORKDIR /src
+COPY supervisor/go.mod ./
+RUN go mod download
+COPY supervisor/main.go ./
+RUN CGO_ENABLED=0 GOOS=linux go build -o /agent-supervisor .
+
+FROM nginx:1.27
+COPY --from=build /agent-supervisor /agent-supervisor
+COPY .env.v2 /.env
+# See Dockerfile (v1) -- nginx's base STOPSIGNAL SIGQUIT must be overridden
+# so shutdown signals actually reach agent-supervisor's SIGTERM handler.
+STOPSIGNAL SIGTERM
+ENTRYPOINT ["/agent-supervisor"]

@@ -1,0 +1,41 @@
+# Everything for this POC lives in one namespace, standing in for an
+# intern's allotted UK8s namespace.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ubs-poc
+---
+# The controller needs to list/watch/patch/delete Deployments cluster-wide
+# (or namespace-scoped in the real UK8s model, per-intern-namespace RBAC --
+# a ClusterRole is used here purely for POC simplicity so it can watch every
+# namespace this demo touches). No CRD verbs are needed anywhere, on purpose.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ubs-agent-controller
+  namespace: ubs-poc
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ubs-agent-controller
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch", "patch", "delete"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ubs-agent-controller
+subjects:
+  - kind: ServiceAccount
+    name: ubs-agent-controller
+    namespace: ubs-poc
+roleRef:
+  kind: ClusterRole
+  name: ubs-agent-controller
+  apiGroup: rbac.authorization.k8s.io

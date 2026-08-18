@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubs-agent-controller
+  namespace: ubs-poc
+spec:
+  replicas: 1   # single active reconciler -- see docs/ARCHITECTURE.md on why
+                # this must stay 1 (or use leader election) given the UBS
+                # blueprint API has no locking of its own.
+  selector:
+    matchLabels: { app: ubs-agent-controller }
+  template:
+    metadata:
+      labels: { app: ubs-agent-controller }
+    spec:
+      serviceAccountName: ubs-agent-controller
+      containers:
+        - name: controller
+          image: ubs-poc/controller:latest
+          imagePullPolicy: IfNotPresent
+          args:
+            - "--ubs-api=http://mock-ubs-api.ubs-poc.svc.cluster.local:5000"

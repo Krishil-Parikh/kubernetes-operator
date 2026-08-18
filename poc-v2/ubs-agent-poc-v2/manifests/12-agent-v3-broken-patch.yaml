@@ -1,0 +1,16 @@
+# Simulates a BAD push -- an image that doesn't exist anywhere. Apply with:
+#
+#   kubectl patch deployment stock-research-agent -n ubs-poc-v2 \
+#     --patch-file manifests/12-agent-v3-broken-patch.yaml
+#
+# Expected outcome: the new pod sits in ImagePullBackOff forever. Because
+# maxUnavailable: 0, Kubernetes will not touch the currently-Ready old pod
+# at all -- it just waits indefinitely for a new Ready replica that will
+# never come. Old keeps serving throughout. To "roll back", patch the image
+# field back to the previous known-good tag -- nothing else needs undoing.
+spec:
+  template:
+    spec:
+      containers:
+        - name: agent
+          image: registry.invalid/does-not-exist:v3

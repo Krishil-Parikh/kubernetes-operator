@@ -1,0 +1,16 @@
+# This simulates what CI/CD actually pushes on a version bump: the SAME
+# Deployment name, only the image changed. Apply with:
+#
+#   kubectl patch deployment stock-research-agent -n ubs-poc-v2 \
+#     --patch-file manifests/11-agent-v2-patch.yaml
+#
+# Note there's no AGENT_IMAGE env value to keep in sync anymore -- the v2
+# image already has its own .env baked in with AGENT_IMAGE=...v2. Bumping
+# the image tag is the entire change; nothing can drift out of step with
+# it because there's nothing left to keep in step.
+spec:
+  template:
+    spec:
+      containers:
+        - name: agent
+          image: ubs-poc/demo-agent:v2

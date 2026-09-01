@@ -1,0 +1,918 @@
+Absolutely bro — here’s the complete copy-paste Markdown. You can paste this directly into a .md file.
+
+# Microsoft Foundry Multi-Agent Scrum Pod — Setup Guide
+## 1. What we are building
+The goal is to create a **multi-agent software/project team** in the Microsoft ecosystem, roughly like a virtual Scrum Pod.
+Suggested agents:
+- **Scrum Master / Manager Agent** — coordinates the team, runs standups, assigns work, tracks blockers.
+- **Product Manager Agent** — turns requirements into user stories and priorities.
+- **Developer Agent** — implements technical tasks.
+- **QA Agent** — tests work and reports failures.
+- **Code Review Agent** — reviews implementation and suggests fixes.
+- **Documentation Agent** — maintains project documentation.
+> **Important:** Microsoft does not appear to call this construct a "Pod." The relevant technologies are **Microsoft Foundry Agent Service** and **Microsoft Agent Framework** for multi-agent orchestration.
+---
+# 2. Main Portal
+## Microsoft Foundry
+**Direct access:**
+https://ai.azure.com/
+Use this to sign in and create/open a Foundry project.
+## Microsoft Foundry Agent Service
+https://learn.microsoft.com/en-us/azure/ai-foundry/agents/overview
+Foundry Agent Service is Microsoft's managed platform for building, deploying, and scaling AI agents.
+---
+# 3. Multi-Agent Orchestration
+## Microsoft Agent Framework — Workflow Orchestrations
+https://learn.microsoft.com/en-us/agent-framework/workflows/orchestrations/
+Agent Framework provides orchestration patterns including:
+- **Sequential** — agents execute one after another.
+- **Concurrent** — agents execute in parallel.
+- **Handoff** — agents transfer control to each other.
+- **Group Chat** — agents collaborate in a shared conversation.
+- **Magentic** — a manager agent dynamically coordinates specialized agents.
+For the Scrum Pod idea, **Group Chat** and **Magentic** are especially relevant.
+## Agents in Workflows
+https://learn.microsoft.com/en-us/agent-framework/workflows/agents-in-workflows/
+Use this to understand how agents can be integrated into workflow steps.
+---
+# 4. Foundry Visual Workflows
+## Build a Workflow in Microsoft Foundry
+https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/workflow
+Foundry's visual workflow builder can orchestrate multiple agents.
+It includes patterns such as:
+- Sequential
+- Group Chat
+- Human-in-the-loop
+## Important 2026 Note
+Microsoft currently states that **Foundry Workflows are being retired on December 1, 2026**.
+For new development, Microsoft recommends **Microsoft Agent Framework**.
+Therefore:
+> Use Foundry for the agents/platform, and use Microsoft Agent Framework as the main orchestration layer for a new Scrum Pod.
+---
+# 5. Recommended Scrum Pod Architecture
+```text
+                    +-----------------------+
+                    |   SCRUM MASTER AGENT  |
+                    |   Team Coordinator    |
+                    +-----------+-----------+
+                                |
+              +-----------------+-----------------+
+              |                 |                 |
+              v                 v                 v
+       +-------------+   +-------------+   +-------------+
+       |     PM      |   | DEVELOPER   |   |     QA      |
+       |    Agent    |   |    Agent    |   |    Agent    |
+       +------+------+   +------+------+   +------+------+
+              |                 |                 |
+              +-----------------+-----------------+
+                                |
+                                v
+                       +----------------+
+                       | CODE REVIEWER  |
+                       |     Agent      |
+                       +-------+--------+
+                               |
+                               v
+                       +----------------+
+                       | DOCUMENTATION  |
+                       |     Agent      |
+                       +----------------+
+
+⸻
+
+6. Example Daily Scrum / Standup
+
+The Scrum Master Agent can coordinate something like:
+
+Scrum Master:
+Good morning team. Let's begin today's standup.
+Product Manager:
+Yesterday we finalized the expense dashboard requirements.
+Today's priority is implementing expense categorization.
+Developer:
+Yesterday I completed the expense model.
+Today I'll implement the categorization API.
+Blocker: I need clarification on the category hierarchy.
+QA:
+Yesterday I tested the login flow.
+All 8 tests passed.
+No blockers.
+Scrum Master:
+PM, please clarify the category hierarchy.
+Developer, proceed once clarified.
+QA, prepare tests for expense categorization.
+Scrum Master:
+Standup complete.
+
+⸻
+
+7. What Exactly to Do
+
+Step 1 — Open Microsoft Foundry
+
+Go to:
+
+https://ai.azure.com/
+
+Sign in with the Microsoft account associated with your Azure subscription.
+
+⸻
+
+Step 2 — Create a Foundry Project
+
+Create a new project.
+
+Suggested name:
+
+AI-Scrum-Pod
+
+⸻
+
+Step 3 — Create the First Four Agents
+
+Start with only four agents:
+
+ScrumMaster
+ProductManager
+Developer
+QA
+
+Do not start with 10+ agents.
+
+Build the basic system first.
+
+⸻
+
+8. Agent Responsibilities
+
+ScrumMaster Agent
+
+Responsibilities:
+
+* Coordinate the team.
+* Maintain sprint goals.
+* Run daily standups.
+* Identify blockers.
+* Assign tasks.
+* Track progress.
+* Summarize sprint status.
+* Decide which specialist should act next.
+
+The Scrum Master should not implement code.
+
+⸻
+
+ProductManager Agent
+
+Responsibilities:
+
+* Understand user requirements.
+* Create epics.
+* Create user stories.
+* Define acceptance criteria.
+* Prioritize requirements.
+* Clarify requirements for developers.
+
+⸻
+
+Developer Agent
+
+Responsibilities:
+
+* Implement assigned technical tasks.
+* Modify/create code.
+* Explain implementation decisions.
+* Report blockers.
+* Request clarification when requirements are incomplete.
+
+⸻
+
+QA Agent
+
+Responsibilities:
+
+* Create test cases.
+* Test completed functionality.
+* Identify bugs.
+* Report failures.
+* Verify fixes.
+* Provide test summaries.
+
+⸻
+
+9. Build the Multi-Agent Orchestration
+
+For a new implementation, use:
+
+Microsoft Agent Framework
+
+Documentation:
+
+https://learn.microsoft.com/en-us/agent-framework/workflows/orchestrations/
+
+Start with one of these:
+
+Option A — Group Chat
+
+Use when you want the agents to communicate as a team.
+
+ScrumMaster
+     |
+     +---- ProductManager
+     |
+     +---- Developer
+     |
+     +---- QA
+     |
+     +---- CodeReviewer
+
+The agents participate in a shared conversation.
+
+⸻
+
+Option B — Magentic
+
+Use when you want a manager-style agent to dynamically coordinate specialists.
+
+              ScrumMaster
+                   |
+        +----------+----------+
+        |          |          |
+        v          v          v
+       PM      Developer      QA
+        |          |          |
+        +----------+----------+
+                   |
+                   v
+              Code Review
+
+This is particularly interesting for an autonomous Scrum team.
+
+⸻
+
+10. Add Persistent Project State
+
+Eventually the Pod needs to maintain information such as:
+
+Sprint Number
+Sprint Goal
+Backlog
+User Stories
+Tasks
+Task Status
+Agent Assignments
+Blockers
+Test Results
+Decisions
+Standup History
+Code Review Results
+
+Example:
+
+{
+  "sprint": 4,
+  "goal": "Complete expense dashboard",
+  "tasks": [
+    {
+      "task": "Implement expense categories",
+      "owner": "Developer",
+      "status": "In Progress"
+    },
+    {
+      "task": "Test expense API",
+      "owner": "QA",
+      "status": "Pending"
+    }
+  ],
+  "blockers": []
+}
+
+The exact storage service can be chosen later based on the project requirements.
+
+⸻
+
+11. Connect Development Tools
+
+Once the basic Pod works, connect it to the development environment.
+
+Possible integrations include:
+
+* GitHub
+* Microsoft Teams
+* Microsoft 365
+* MCP servers
+* APIs
+* Azure Storage
+* Azure AI Search
+* Other development tools
+
+The eventual architecture can look like:
+
+User Requirement
+       |
+       v
+Product Manager
+       |
+       v
+Scrum Master
+       |
+       v
+Developer
+       |
+       v
+Code Repository
+       |
+       v
+QA
+       |
+       v
+Code Reviewer
+       |
+       v
+Documentation
+       |
+       v
+Scrum Master
+       |
+       v
+Sprint Status
+
+⸻
+
+12. Azure Credit / Pricing
+
+Azure Free Account
+
+https://azure.microsoft.com/en-in/pricing/purchase-options/azure-account/
+
+Microsoft’s current Free Account page describes a USD $200 credit for 30 days for eligible new customers, along with selected free services.
+
+If your account specifically shows:
+
+$100 remaining
+
+then your actual account balance is what matters.
+
+⸻
+
+Microsoft Foundry Pricing
+
+https://azure.microsoft.com/en-us/pricing/details/microsoft-foundry/
+
+Foundry is a platform, but the models and Azure services you consume can have separate costs.
+
+Think of it like:
+
+Microsoft Foundry
+       |
+       +---- Agents
+       |
+       +---- Models --------> Usage Cost
+       |
+       +---- Tools ---------> Possible Cost
+       |
+       +---- Storage --------> Possible Cost
+       |
+       +---- Compute --------> Possible Cost
+       |
+       +---- Other Azure Services
+
+⸻
+
+13. How to Make the $100 Credit Last
+
+For the initial prototype:
+
+* Use a cost-efficient model.
+* Keep prompts concise.
+* Avoid unnecessary agent-to-agent loops.
+* Limit automatic retries.
+* Start with 3–4 agents.
+* Monitor Azure costs from the beginning.
+* Add expensive tools only when necessary.
+* Avoid having every agent respond to every message.
+
+For example, don’t do:
+
+ScrumMaster
+   ↓
+PM
+   ↓
+Developer
+   ↓
+QA
+   ↓
+Reviewer
+   ↓
+Documentation
+   ↓
+PM
+   ↓
+Developer
+   ↓
+QA
+   ↓
+...
+
+without a termination condition.
+
+Otherwise, an autonomous multi-agent loop can consume model credits very quickly.
+
+⸻
+
+14. Recommended First Prototype
+
+Do not start by building a fully autonomous software company.
+
+Start with a small project.
+
+Example
+
+Build a simple expense-tracking web application.
+
+⸻
+
+Product Manager
+
+Creates:
+
+Epic:
+Expense Tracking
+User Stories:
+1. User can create an account.
+2. User can log in.
+3. User can add an expense.
+4. User can categorize an expense.
+5. User can view expenses.
+6. User can edit an expense.
+7. User can delete an expense.
+
+Defines acceptance criteria for each story.
+
+⸻
+
+Scrum Master
+
+Creates the sprint.
+
+Example:
+
+Sprint 1
+Goal:
+Build authentication and expense creation.
+Tasks:
+- Implement authentication
+- Create user model
+- Create expense model
+- Create expense API
+- Write tests
+
+Assigns the tasks to the Developer Agent.
+
+⸻
+
+Developer
+
+Implements the functionality.
+
+⸻
+
+QA
+
+Tests it.
+
+Example:
+
+Test Results
+Login:
+8/8 passed
+Expense Creation:
+6/7 passed
+Bug:
+Expense amount accepts negative values.
+Severity:
+Medium
+Status:
+Open
+
+⸻
+
+Scrum Master
+
+Coordinates the fix.
+
+Scrum Master:
+Developer, fix negative expense validation.
+Developer:
+Fix implemented.
+QA:
+Retesting.
+QA:
+7/7 tests passed.
+Scrum Master:
+Task completed.
+
+⸻
+
+15. Example Sprint Report
+
+The Scrum Master should eventually be able to produce something like:
+
+==================================================
+SPRINT REPORT
+==================================================
+Sprint: 1
+Goal:
+Implement authentication and expense creation.
+--------------------------------------------------
+COMPLETED
+--------------------------------------------------
+✓ User authentication
+✓ Login page
+✓ User model
+✓ Expense model
+✓ Expense creation API
+--------------------------------------------------
+IN PROGRESS
+--------------------------------------------------
+→ Expense dashboard
+--------------------------------------------------
+BLOCKED
+--------------------------------------------------
+None
+--------------------------------------------------
+QA
+--------------------------------------------------
+Authentication:
+8/8 tests passed
+Expense API:
+7/7 tests passed
+--------------------------------------------------
+CODE REVIEW
+--------------------------------------------------
+4 files reviewed
+2 minor suggestions
+0 critical issues
+--------------------------------------------------
+NEXT SPRINT
+--------------------------------------------------
+1. Complete dashboard
+2. Add expense editing
+3. Add expense deletion
+4. Improve validation
+==================================================
+
+⸻
+
+16. Recommended Development Roadmap
+
+Phase 1 — Basic Agents
+
+Build:
+
+ScrumMaster
+ProductManager
+Developer
+QA
+
+Goal:
+
+Agents can communicate and complete a simple project.
+
+⸻
+
+Phase 2 — Orchestration
+
+Add:
+
+Microsoft Agent Framework
+
+Use:
+
+Group Chat
+
+or:
+
+Magentic
+
+Goal:
+
+Agents can coordinate without manually moving messages between them.
+
+⸻
+
+Phase 3 — Persistent State
+
+Add:
+
+Sprint State
+Backlog
+Tasks
+Agent Assignments
+Blockers
+Test Results
+
+Goal:
+
+The team remembers the actual project state.
+
+⸻
+
+Phase 4 — Development Integration
+
+Add:
+
+GitHub
+Code Repository
+Automated Tests
+Issue Tracking
+
+Goal:
+
+Agents can actually work on a software project.
+
+⸻
+
+Phase 5 — Additional Agents
+
+Add:
+
+CodeReviewer
+DocumentationAgent
+SecurityAgent
+DevOpsAgent
+UXAgent
+ResearchAgent
+
+Goal:
+
+Turn the basic team into a complete engineering organization.
+
+⸻
+
+Phase 6 — Autonomous Scrum
+
+Eventually:
+
+Requirement
+     ↓
+PM Agent
+     ↓
+Scrum Master
+     ↓
+Sprint Planning
+     ↓
+Task Assignment
+     ↓
+Developer
+     ↓
+QA
+     ↓
+Code Review
+     ↓
+Fixes
+     ↓
+Documentation
+     ↓
+Sprint Review
+     ↓
+Retrospective
+     ↓
+Next Sprint
+
+At this point, the system begins to behave like an autonomous software-development Scrum Pod.
+
+⸻
+
+17. Possible Future Scrum Ceremonies
+
+The Pod can eventually implement:
+
+Sprint Planning
+
+Product Manager
+       ↓
+Scrum Master
+       ↓
+Developer
+       ↓
+QA
+
+Daily Standup
+
+What did you do yesterday?
+What will you do today?
+Are you blocked?
+
+Sprint Review
+
+Completed work
+Demo
+QA results
+Remaining work
+
+Sprint Retrospective
+
+What went well?
+What went wrong?
+What should change?
+
+Backlog Refinement
+
+New requirements
+      ↓
+Product Manager
+      ↓
+User Stories
+      ↓
+Acceptance Criteria
+      ↓
+Prioritization
+
+⸻
+
+18. Important Design Rule
+
+Do not make every agent autonomous all the time.
+
+Use clear responsibility boundaries.
+
+For example:
+
+Product Manager
+     |
+     | Requirements
+     v
+Scrum Master
+     |
+     | Tasks
+     v
+Developer
+     |
+     | Implementation
+     v
+QA
+     |
+     | Test Result
+     v
+Scrum Master
+
+This reduces:
+
+* Token usage
+* Conflicting decisions
+* Infinite loops
+* Duplicate work
+* Unnecessary model calls
+
+⸻
+
+19. Official Microsoft Links
+
+Microsoft Foundry
+
+https://ai.azure.com/
+
+Foundry Agent Service
+
+https://learn.microsoft.com/en-us/azure/ai-foundry/agents/overview
+
+Microsoft Agent Framework
+
+https://learn.microsoft.com/en-us/agent-framework/
+
+Multi-Agent Orchestration
+
+https://learn.microsoft.com/en-us/agent-framework/workflows/orchestrations/
+
+Agents in Workflows
+
+https://learn.microsoft.com/en-us/agent-framework/workflows/agents-in-workflows/
+
+Foundry Workflows
+
+https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/workflow
+
+Foundry SDK Overview
+
+https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/sdk-overview
+
+Foundry + Agent Framework Integration
+
+https://learn.microsoft.com/en-us/agent-framework/integrations/by-component/agent-services/foundry
+
+Microsoft Foundry Pricing
+
+https://azure.microsoft.com/en-us/pricing/details/microsoft-foundry/
+
+Azure Free Account
+
+https://azure.microsoft.com/en-in/pricing/purchase-options/azure-account/
+
+⸻
+
+20. Final Recommended Architecture
+
+                    AZURE SUBSCRIPTION
+                           |
+                           v
+                  MICROSOFT FOUNDRY
+                           |
+                           v
+                 FOUNDRY PROJECT
+                           |
+             +-------------+-------------+
+             |             |             |
+             v             v             v
+          SCRUM           PM          DEVELOPER
+          MASTER         AGENT          AGENT
+             |             |             |
+             +-------------+-------------+
+                           |
+                           v
+                          QA
+                         AGENT
+                           |
+                           v
+                    CODE REVIEWER
+                           |
+                           v
+                   DOCUMENTATION
+                           |
+                           v
+                  PROJECT STATE
+                           |
+                           v
+                GITHUB / DEV TOOLS
+                           |
+                           v
+                 AUTONOMOUS SCRUM
+                       POD
+
+⸻
+
+21. Bottom Line
+
+The thing to build is not a Microsoft feature literally called “Pod.”
+
+The correct Microsoft stack for this idea is:
+
+Microsoft Foundry Agent Service + Microsoft Agent Framework + Multi-Agent Orchestration
+
+The most relevant orchestration patterns are:
+
+Group Chat and Magentic
+
+For a new project in 2026:
+
+Use Microsoft Agent Framework as the primary orchestration layer and Microsoft Foundry as the managed agent/model platform.
+
+Start with:
+
+1. Scrum Master
+2. Product Manager
+3. Developer
+4. QA
+
+Prove that the four-agent system works.
+
+Then add:
+
+5. Code Reviewer
+6. Documentation Agent
+7. GitHub
+8. Automated Testing
+9. Persistent Memory/State
+10. Teams Notifications
+11. Human Approval Gates
+12. More autonomous Scrum ceremonies
+
+The final goal is:
+
+USER REQUIREMENT
+       ↓
+PRODUCT MANAGER
+       ↓
+SPRINT PLANNING
+       ↓
+SCRUM MASTER
+       ↓
+TASK ASSIGNMENT
+       ↓
+DEVELOPER
+       ↓
+QA
+       ↓
+CODE REVIEW
+       ↓
+FIXES
+       ↓
+DOCUMENTATION
+       ↓
+SPRINT REVIEW
+       ↓
+RETROSPECTIVE
+       ↓
+NEXT SPRINT
+
+This gives us the closest practical equivalent to an AI Scrum Pod inside the Microsoft ecosystem.
